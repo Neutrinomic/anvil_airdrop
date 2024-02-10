@@ -1,0 +1,24 @@
+{
+  "canisters": {
+    "amm": {
+      "type": "motoko",
+      "main": "src/main.mo"
+    },
+    "www": {
+      "frontend": {
+        "entrypoint": "assets/index.html"
+      },
+      "source": [
+        "assets/"
+      ],
+      "type": "assets",
+      "build": "yarn run build"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "mops sources"
+    }
+  },
+  "dfx": "0.15.2"
+}

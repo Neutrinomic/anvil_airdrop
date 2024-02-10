@@ -1,0 +1,24 @@
+{
+  "name": "anvil_airdrop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node ./build.js"
+  },
+  "dependencies": {
+    "@dfinity/agent": "^0.21.4",
+    "@dfinity/auth-client": "^0.21.4",
+    "@dfinity/candid": "^0.21.4",
+    "@dfinity/identity": "^0.21.4",
+    "@dfinity/principal": "^0.21.4",
+    "@infu/icblast": "^2.0.46",
+    "@vvv-interactive/nftanvil-tools": "^1.1.0",
+    "esbuild": "^0.20.0",
+    "get-random-values": "^3.0.0",
+    "isomorphic-fetch": "^3.0.0",
+    "js-sha256": "^0.11.0",
+    "p-limit": "^5.0.0"
+  }
+}
