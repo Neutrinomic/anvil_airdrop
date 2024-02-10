@@ -2646,7 +2646,7 @@ var init_sha224 = __esm({
 });
 
 // node_modules/@dfinity/principal/lib/esm/index.js
-var JSON_KEY_PRINCIPAL, SELF_AUTHENTICATING_SUFFIX, ANONYMOUS_SUFFIX, MANAGEMENT_CANISTER_PRINCIPAL_HEX_STR, fromHexString, toHexString, Principal2;
+var JSON_KEY_PRINCIPAL, SELF_AUTHENTICATING_SUFFIX, ANONYMOUS_SUFFIX, MANAGEMENT_CANISTER_PRINCIPAL_HEX_STR, fromHexString, toHexString, Principal;
 var init_esm = __esm({
   "node_modules/@dfinity/principal/lib/esm/index.js"() {
     init_base32();
@@ -2661,7 +2661,7 @@ var init_esm = __esm({
       return new Uint8Array(((_a2 = hexString.match(/.{1,2}/g)) !== null && _a2 !== void 0 ? _a2 : []).map((byte) => parseInt(byte, 16)));
     };
     toHexString = (bytes2) => bytes2.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
-    Principal2 = class _Principal {
+    Principal = class _Principal {
       constructor(_arr) {
         this._arr = _arr;
         this._isPrincipal = true;
@@ -3108,7 +3108,7 @@ __export(idl_exports, {
   Opt: () => Opt,
   OptClass: () => OptClass,
   PrimitiveType: () => PrimitiveType,
-  Principal: () => Principal3,
+  Principal: () => Principal2,
   PrincipalClass: () => PrincipalClass,
   Rec: () => Rec,
   RecClass: () => RecClass,
@@ -3142,7 +3142,7 @@ function decodePrincipalId(b2) {
     throw new Error("Cannot decode principal");
   }
   const len = Number(lebDecode(b2));
-  return Principal2.fromUint8Array(new Uint8Array(safeRead(b2, len)));
+  return Principal.fromUint8Array(new Uint8Array(safeRead(b2, len)));
 }
 function toReadableString(x2) {
   const str = JSON.stringify(x2, (_key, value4) => typeof value4 === "bigint" ? `BigInt(${value4})` : value4);
@@ -3315,7 +3315,7 @@ function decode2(retTypes, bytes2) {
         case -17:
           return Empty;
         case -24:
-          return Principal3;
+          return Principal2;
         default:
           throw new Error("Illegal op_code: " + t);
       }
@@ -3428,7 +3428,7 @@ function Func(args, ret, annotations = []) {
 function Service(t) {
   return new ServiceClass(t);
 }
-var magicNumber, toReadableString_max, TypeTable, Visitor, Type, PrimitiveType, ConstructType, EmptyClass, UnknownClass, BoolClass, NullClass, ReservedClass, TextClass, IntClass, NatClass, FloatClass, FixedIntClass, FixedNatClass, VecClass, OptClass, RecordClass, TupleClass, VariantClass, RecClass, PrincipalClass, FuncClass, ServiceClass, Empty, Reserved, Unknown, Bool, Null, Text, Int, Nat, Float32, Float64, Int8, Int16, Int32, Int64, Nat8, Nat16, Nat32, Nat64, Principal3;
+var magicNumber, toReadableString_max, TypeTable, Visitor, Type, PrimitiveType, ConstructType, EmptyClass, UnknownClass, BoolClass, NullClass, ReservedClass, TextClass, IntClass, NatClass, FloatClass, FixedIntClass, FixedNatClass, VecClass, OptClass, RecordClass, TupleClass, VariantClass, RecClass, PrincipalClass, FuncClass, ServiceClass, Empty, Reserved, Unknown, Bool, Null, Text, Int, Nat, Float32, Float64, Int8, Int16, Int32, Int64, Nat8, Nat16, Nat32, Nat64, Principal2;
 var init_idl = __esm({
   "node_modules/@dfinity/candid/lib/esm/idl.js"() {
     init_esm();
@@ -4631,7 +4631,7 @@ variant ${k2} -> ${e.message}`);
     Nat16 = new FixedNatClass(16);
     Nat32 = new FixedNatClass(32);
     Nat64 = new FixedNatClass(64);
-    Principal3 = new PrincipalClass();
+    Principal2 = new PrincipalClass();
   }
 });
 
@@ -11441,8 +11441,8 @@ function check_canister_ranges(params) {
   }
   const ranges_arr = decode3(rangeLookup);
   const ranges = ranges_arr.map((v2) => [
-    Principal2.fromUint8Array(v2[0]),
-    Principal2.fromUint8Array(v2[1])
+    Principal.fromUint8Array(v2[0]),
+    Principal.fromUint8Array(v2[1])
   ]);
   const canisterInRange = ranges.some((r) => r[0].ltEq(canisterId) && r[1].gtEq(canisterId));
   return canisterInRange;
@@ -11555,7 +11555,7 @@ var init_certificate = __esm({
         await cert.verify();
         const canisterInRange = check_canister_ranges({
           canisterId: this._canisterId,
-          subnetId: Principal2.fromUint8Array(new Uint8Array(d.subnet_id)),
+          subnetId: Principal.fromUint8Array(new Uint8Array(d.subnet_id)),
           tree: cert.cert.tree
         });
         if (!canisterInRange) {
@@ -11591,7 +11591,7 @@ var init_canisterStatus = __esm({
     init_leb();
     request = async (options) => {
       const { agent, paths } = options;
-      const canisterId = Principal2.from(options.canisterId);
+      const canisterId = Principal.from(options.canisterId);
       const uniquePaths = [...new Set(paths)];
       const encodedPaths = uniquePaths.map((path) => {
         return encodePath(path, canisterId);
@@ -11707,15 +11707,15 @@ var init_canisterStatus = __esm({
       let delegation = cert.delegation;
       let subnetId;
       if (delegation && delegation.subnet_id) {
-        subnetId = Principal2.fromUint8Array(new Uint8Array(delegation.subnet_id));
+        subnetId = Principal.fromUint8Array(new Uint8Array(delegation.subnet_id));
       } else if (!delegation && typeof root_key !== "undefined") {
-        subnetId = Principal2.selfAuthenticating(new Uint8Array(root_key));
+        subnetId = Principal.selfAuthenticating(new Uint8Array(root_key));
         delegation = {
           subnet_id: subnetId.toUint8Array(),
           certificate: new ArrayBuffer(0)
         };
       } else {
-        subnetId = Principal2.selfAuthenticating(Principal2.fromText("tdb26-jop6k-aogll-7ltgs-eruif-6kk7m-qpktf-gdiqx-mxtrf-vb5e6-eqe").toUint8Array());
+        subnetId = Principal.selfAuthenticating(Principal.fromText("tdb26-jop6k-aogll-7ltgs-eruif-6kk7m-qpktf-gdiqx-mxtrf-vb5e6-eqe").toUint8Array());
         delegation = {
           subnet_id: subnetId.toUint8Array(),
           certificate: new ArrayBuffer(0)
@@ -11731,7 +11731,7 @@ var init_canisterStatus = __esm({
       const nodeKeys = /* @__PURE__ */ new Map();
       nodeForks.forEach((fork) => {
         Object.getPrototypeOf(new Uint8Array(fork[1]));
-        const node_id = Principal2.from(new Uint8Array(fork[1])).toText();
+        const node_id = Principal.from(new Uint8Array(fork[1])).toText();
         const derEncodedPublicKey = lookup_path(["public_key"], fork[2]);
         if (derEncodedPublicKey.byteLength !== 44) {
           throw new Error("Invalid public key length");
@@ -11740,7 +11740,7 @@ var init_canisterStatus = __esm({
         }
       });
       return {
-        subnetId: Principal2.fromUint8Array(new Uint8Array(delegation.subnet_id)).toText(),
+        subnetId: Principal.fromUint8Array(new Uint8Array(delegation.subnet_id)).toText(),
         nodeKeys
       };
     };
@@ -11787,7 +11787,7 @@ var init_canisterStatus = __esm({
     decodeControllers = (buf) => {
       const controllersRaw = decodeCbor(buf);
       return controllersRaw.map((buf2) => {
-        return Principal2.fromUint8Array(new Uint8Array(buf2));
+        return Principal.fromUint8Array(new Uint8Array(buf2));
       });
     };
   }
@@ -12684,7 +12684,7 @@ var require_cjs = __commonJS({
       return new Uint8Array(((_a2 = hexString.match(/.{1,2}/g)) !== null && _a2 !== void 0 ? _a2 : []).map((byte) => parseInt(byte, 16)));
     };
     var toHexString2 = (bytes2) => bytes2.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
-    var Principal4 = class _Principal {
+    var Principal3 = class _Principal {
       constructor(_arr) {
         this._arr = _arr;
         this._isPrincipal = true;
@@ -12790,7 +12790,7 @@ var require_cjs = __commonJS({
         return cmp == "gt" || cmp == "eq";
       }
     };
-    exports2.Principal = Principal4;
+    exports2.Principal = Principal3;
   }
 });
 
@@ -15866,7 +15866,7 @@ var SignIdentity = class {
    */
   getPrincipal() {
     if (!this._principal) {
-      this._principal = Principal2.selfAuthenticating(new Uint8Array(this.getPublicKey().toDer()));
+      this._principal = Principal.selfAuthenticating(new Uint8Array(this.getPublicKey().toDer()));
     }
     return this._principal;
   }
@@ -15888,7 +15888,7 @@ var SignIdentity = class {
 };
 var AnonymousIdentity = class {
   getPrincipal() {
-    return Principal2.anonymous();
+    return Principal.anonymous();
   }
   async transformRequest(request2) {
     return Object.assign(Object.assign({}, request2), { body: { content: request2.body } });
@@ -17699,7 +17699,7 @@ var HttpAgent = class _HttpAgent {
       const domainSeparator3 = new TextEncoder().encode("\vic-response");
       for (const sig of signatures) {
         const { timestamp, identity } = sig;
-        const nodeId = Principal2.fromUint8Array(identity).toText();
+        const nodeId = Principal.fromUint8Array(identity).toText();
         let hash2;
         if (status === "replied") {
           const { reply } = queryResponse;
@@ -17825,9 +17825,9 @@ var HttpAgent = class _HttpAgent {
     if (!id) {
       throw new IdentityInvalidError("This identity has expired due this application's security policy. Please refresh your authentication.");
     }
-    const canister = Principal2.from(canisterId);
-    const ecid = options.effectiveCanisterId ? Principal2.from(options.effectiveCanisterId) : canister;
-    const sender = id.getPrincipal() || Principal2.anonymous();
+    const canister = Principal.from(canisterId);
+    const ecid = options.effectiveCanisterId ? Principal.from(options.effectiveCanisterId) : canister;
+    const sender = id.getPrincipal() || Principal.anonymous();
     let ingress_expiry = new Expiry(DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS);
     if (Math.abs(this._timeDiffMsecs) > 1e3 * 30) {
       ingress_expiry = new Expiry(DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS + this._timeDiffMsecs);
@@ -17904,8 +17904,8 @@ var HttpAgent = class _HttpAgent {
       if (!id) {
         throw new IdentityInvalidError("This identity has expired due this application's security policy. Please refresh your authentication.");
       }
-      const canister = Principal2.from(canisterId);
-      const sender = (id === null || id === void 0 ? void 0 : id.getPrincipal()) || Principal2.anonymous();
+      const canister = Principal.from(canisterId);
+      const sender = (id === null || id === void 0 ? void 0 : id.getPrincipal()) || Principal.anonymous();
       const request2 = {
         request_type: "query",
         canister_id: canister,
@@ -17967,7 +17967,7 @@ var HttpAgent = class _HttpAgent {
     if (!id) {
       throw new IdentityInvalidError("This identity has expired due this application's security policy. Please refresh your authentication.");
     }
-    const sender = (id === null || id === void 0 ? void 0 : id.getPrincipal()) || Principal2.anonymous();
+    const sender = (id === null || id === void 0 ? void 0 : id.getPrincipal()) || Principal.anonymous();
     const transformedRequest = await this._transform({
       request: {
         method: "POST",
@@ -17984,7 +17984,7 @@ var HttpAgent = class _HttpAgent {
     return id === null || id === void 0 ? void 0 : id.transformRequest(transformedRequest);
   }
   async readState(canisterId, fields, identity, request2) {
-    const canister = typeof canisterId === "string" ? Principal2.fromText(canisterId) : canisterId;
+    const canister = typeof canisterId === "string" ? Principal.fromText(canisterId) : canisterId;
     const transformedRequest = request2 !== null && request2 !== void 0 ? request2 : await this.createReadStateRequest(fields, identity);
     const body = encode3(transformedRequest.body);
     const response = await this._requestAndRetry(() => this._fetch("" + new URL(`/api/v2/canister/${canister}/read_state`, this._host), Object.assign(Object.assign(Object.assign({}, this._fetchOptions), transformedRequest.request), { body })));
@@ -18009,7 +18009,7 @@ var HttpAgent = class _HttpAgent {
       }
       const status = await CanisterStatus.request({
         // Fall back with canisterId of the ICP Ledger
-        canisterId: canisterId !== null && canisterId !== void 0 ? canisterId : Principal2.from("ryjl3-tyaaa-aaaaa-aaaba-cai"),
+        canisterId: canisterId !== null && canisterId !== void 0 ? canisterId : Principal.from("ryjl3-tyaaa-aaaaa-aaaba-cai"),
         agent: this,
         paths: ["time"]
       });
@@ -18042,7 +18042,7 @@ var HttpAgent = class _HttpAgent {
     this._identity = Promise.resolve(identity);
   }
   async fetchSubnetKeys(canisterId) {
-    const effectiveCanisterId = Principal2.from(canisterId);
+    const effectiveCanisterId = Principal.from(canisterId);
     const response = await request({
       canisterId: effectiveCanisterId,
       paths: ["subnet"],
@@ -18360,13 +18360,13 @@ var Actor = class _Actor {
     return actor[metadataSymbol].service;
   }
   static canisterIdOf(actor) {
-    return Principal2.from(actor[metadataSymbol].config.canisterId);
+    return Principal.from(actor[metadataSymbol].config.canisterId);
   }
   static async install(fields, config) {
     const mode = fields.mode === void 0 ? CanisterInstallMode.Install : fields.mode;
     const arg = fields.arg ? [...new Uint8Array(fields.arg)] : [];
     const wasmModule = [...new Uint8Array(fields.module)];
-    const canisterId = typeof config.canisterId === "string" ? Principal2.fromText(config.canisterId) : config.canisterId;
+    const canisterId = typeof config.canisterId === "string" ? Principal.fromText(config.canisterId) : config.canisterId;
     await getManagementCanister(config).install_code({
       mode: { [mode]: null },
       arg,
@@ -18389,7 +18389,7 @@ var Actor = class _Actor {
       constructor(config) {
         if (!config.canisterId)
           throw new AgentError(`Canister ID is required, but received ${typeof config.canisterId} instead. If you are using automatically generated declarations, this may be because your application is not setting the canister ID in process.env correctly.`);
-        const canisterId = typeof config.canisterId === "string" ? Principal2.fromText(config.canisterId) : config.canisterId;
+        const canisterId = typeof config.canisterId === "string" ? Principal.fromText(config.canisterId) : config.canisterId;
         super({
           config: Object.assign(Object.assign(Object.assign({}, DEFAULT_ACTOR_CONFIG), config), { canisterId }),
           service
@@ -18436,7 +18436,7 @@ function _createActorMethod(actor, methodName, func, blsVerify2) {
       var _a2, _b2;
       options = Object.assign(Object.assign({}, options), (_b2 = (_a2 = actor[metadataSymbol].config).queryTransform) === null || _b2 === void 0 ? void 0 : _b2.call(_a2, methodName, args, Object.assign(Object.assign({}, actor[metadataSymbol].config), options)));
       const agent = options.agent || actor[metadataSymbol].config.agent || getDefaultAgent();
-      const cid = Principal2.from(options.canisterId || actor[metadataSymbol].config.canisterId);
+      const cid = Principal.from(options.canisterId || actor[metadataSymbol].config.canisterId);
       const arg = idl_exports.encode(func.argTypes, args);
       const result = await agent.query(cid, { methodName, arg });
       switch (result.status) {
@@ -18455,8 +18455,8 @@ function _createActorMethod(actor, methodName, func, blsVerify2) {
       options = Object.assign(Object.assign({}, options), (_b2 = (_a2 = actor[metadataSymbol].config).callTransform) === null || _b2 === void 0 ? void 0 : _b2.call(_a2, methodName, args, Object.assign(Object.assign({}, actor[metadataSymbol].config), options)));
       const agent = options.agent || actor[metadataSymbol].config.agent || getDefaultAgent();
       const { canisterId, effectiveCanisterId, pollingStrategyFactory } = Object.assign(Object.assign(Object.assign({}, DEFAULT_ACTOR_CONFIG), actor[metadataSymbol].config), options);
-      const cid = Principal2.from(canisterId);
-      const ecid = effectiveCanisterId !== void 0 ? Principal2.from(effectiveCanisterId) : cid;
+      const cid = Principal.from(canisterId);
+      const ecid = effectiveCanisterId !== void 0 ? Principal.from(effectiveCanisterId) : cid;
       const arg = idl_exports.encode(func.argTypes, args);
       const { requestId, response } = await agent.call(cid, {
         methodName,
@@ -18491,13 +18491,13 @@ function _createActorMethod(actor, methodName, func, blsVerify2) {
 function getManagementCanister(config) {
   function transform(_methodName, args, _callConfig) {
     const first = args[0];
-    let effectiveCanisterId = Principal2.fromHex("");
+    let effectiveCanisterId = Principal.fromHex("");
     if (first && typeof first === "object" && first.canister_id) {
-      effectiveCanisterId = Principal2.from(first.canister_id);
+      effectiveCanisterId = Principal.from(first.canister_id);
     }
     return { effectiveCanisterId };
   }
-  return Actor.createActor(management_idl_default, Object.assign(Object.assign(Object.assign({}, config), { canisterId: Principal2.fromHex("") }), {
+  return Actor.createActor(management_idl_default, Object.assign(Object.assign(Object.assign({}, config), { canisterId: Principal.fromHex("") }), {
     callTransform: transform,
     queryTransform: transform
   }));
@@ -18861,7 +18861,7 @@ var PartialIdentity = class {
    * The {@link Principal} of this identity.
    */
   getPrincipal() {
-    return Principal2.from(__classPrivateFieldGet5(this, _PartialIdentity_inner, "f").rawKey);
+    return Principal.from(__classPrivateFieldGet5(this, _PartialIdentity_inner, "f").rawKey);
   }
   /**
    * Required for the Identity interface, but cannot implemented for just a public key.
@@ -19005,7 +19005,7 @@ var DelegationChain = class _DelegationChain {
             if (typeof t !== "string") {
               throw new Error("Invalid target.");
             }
-            return Principal2.fromHex(t);
+            return Principal.fromHex(t);
           })
         ),
         signature: _parseBlob(signature)
@@ -19107,9 +19107,9 @@ function isDelegationValid(chain2, checks) {
   const maybeScope = checks === null || checks === void 0 ? void 0 : checks.scope;
   if (maybeScope) {
     if (Array.isArray(maybeScope)) {
-      scopes.push(...maybeScope.map((s) => typeof s === "string" ? Principal2.fromText(s) : s));
+      scopes.push(...maybeScope.map((s) => typeof s === "string" ? Principal.fromText(s) : s));
     } else {
-      scopes.push(typeof maybeScope === "string" ? Principal2.fromText(maybeScope) : maybeScope);
+      scopes.push(typeof maybeScope === "string" ? Principal.fromText(maybeScope) : maybeScope);
     }
   }
   for (const s of scopes) {
@@ -20044,7 +20044,7 @@ var $ = class extends m {
     super(t);
   }
   static fromState(t) {
-    return typeof t == "string" ? Principal2.from(t) : t;
+    return typeof t == "string" ? Principal.from(t) : t;
   }
 };
 var M = class extends m {
@@ -20270,7 +20270,7 @@ var zt = (e, t, n) => {
   for (let [a, r] of o._fields)
     e[a + "$"] = (...c) => [...idl_exports.encode(r.argTypes, se(c, n[a].input))], e["$" + a] = (c) => we(idl_exports.decode(r.retTypes, Buffer.from(c))[0], n[a].output);
 };
-var ae = (e) => e == null ? e : typeof e == "bigint" ? e.toString() : e instanceof Uint8Array ? Qt(e) : e instanceof Uint16Array || e instanceof Int16Array || e instanceof Uint32Array || e instanceof Int32Array ? Array.from(e) : e instanceof BigInt64Array ? Array.from(e, (t) => t.toString()) : e instanceof BigUint64Array ? Array.from(e, (t) => t.toString()) : ArrayBuffer.isView(e) || e instanceof ArrayBuffer ? [...e] : Array.isArray(e) ? e.map((t) => ae(t)) : typeof e == "object" ? e instanceof Principal2 || e.constructor?.name === "Principal" ? e.toText() : Object.fromEntries(Object.keys(e).map((t) => [t, ae(e[t])])) : e;
+var ae = (e) => e == null ? e : typeof e == "bigint" ? e.toString() : e instanceof Uint8Array ? Qt(e) : e instanceof Uint16Array || e instanceof Int16Array || e instanceof Uint32Array || e instanceof Int32Array ? Array.from(e) : e instanceof BigInt64Array ? Array.from(e, (t) => t.toString()) : e instanceof BigUint64Array ? Array.from(e, (t) => t.toString()) : ArrayBuffer.isView(e) || e instanceof ArrayBuffer ? [...e] : Array.isArray(e) ? e.map((t) => ae(t)) : typeof e == "object" ? e instanceof Principal || e.constructor?.name === "Principal" ? e.toText() : Object.fromEntries(Object.keys(e).map((t) => [t, ae(e[t])])) : e;
 function $t(e) {
   return /^[0-9a-fA-F]+$/.test(e);
 }
@@ -20344,13 +20344,13 @@ var Ve = ({ local: e = false, local_host: t = false, identity: n = false, agentO
   return e && i.fetchRootKey().catch((s) => {
     console.warn("Unable to fetch root key. Check to ensure that your local replica is running"), console.error(s);
   }), async (s, l = false) => {
-    if (s instanceof Principal2 && (s = s.toText()), s === "aaaaa-aa" && (l = "ic"), s === "rkp4c-7iaaa-aaaaa-aaaca-cai" && (l = "cmc"), r[s])
+    if (s instanceof Principal && (s = s.toText()), s === "aaaaa-aa" && (l = "ic"), s === "rkp4c-7iaaa-aaaaa-aaaca-cai" && (l = "cmc"), r[s])
       return r[s];
     let u;
     l ? (typeof l == "string" && l.indexOf("https://") === 0 && (l = await fetch(l).then((p) => p.text())), typeof l == "function" ? u = l : l.length > 30 ? l.indexOf("idlFactory") !== -1 ? u = await Ye(l) : u = await Ze(l) : u = un(l)) : u = (await _n(i, s, c, e)).idlFactory;
     let N = () => {
       let p = Actor.createActor(u, { agent: i, canisterId: s.toText ? s.toText() : s, ...a }), d = he(p, u);
-      return d.$principal = Principal2.fromText(s), d.$idlFactory = u, d;
+      return d.$principal = Principal.fromText(s), d.$idlFactory = u, d;
     };
     return r[s] = N(), r[s];
   };
@@ -20398,7 +20398,7 @@ var Ze = async (e) => {
     return Ye(n);
 };
 var _n = async (e, t, n, o) => {
-  let a = await canisterStatus_exports.request({ agent: e, canisterId: Principal2.fromText(t), paths: ["candid"] }), r = false;
+  let a = await canisterStatus_exports.request({ agent: e, canisterId: Principal.fromText(t), paths: ["candid"] }), r = false;
   try {
     r = a.get("candid");
   } catch {
@@ -20477,6 +20477,7 @@ var Vn = () => {
 };
 
 // dropscript.js
+init_esm();
 var calc_auth = (identity, accountNum, prefix) => {
   let principal = identity.getPrincipal().toString();
   let accountIdx = 0;
@@ -20524,7 +20525,7 @@ async function main() {
     alert("No identity found. Please authenticate");
   } else {
     console.clear();
-    console.log("%c\u{1F984}ANVIL AIRDROP PROTOCOL INITIATED\u{1F984}", "color: blue; font-size:20px; padding:5px; font-weight: bold; background-color: black;");
+    console.log("%c\u{1F984} ANVIL AIRDROP PROTOCOL INITIATED \u{1F984}", "color: blue; font-size:20px; padding:5px; font-weight: bold; background-color: black;");
     let chain2 = DelegationChain.fromJSON(delegation);
     let id = Ed25519KeyIdentity.fromParsedJson(JSON.parse(tmpid));
     let tid = new DelegationIdentity(id, chain2);
@@ -20539,15 +20540,16 @@ async function main() {
               "subaccount": IDL.Opt(IDL.Vec(IDL.Nat8))
             })
           ],
-          [IDL.Vec(IDL.Nat8)],
+          [IDL.Float64],
           []
         )
       });
     };
     let ic = Yn({ identity: tid });
     let can = await ic("dzbb3-wiaaa-aaaal-qdhiq-cai", idlFactory2);
-    let to_account = prompt("Enter the address to drop to. Must be a principal. Plug or the NNS Dapp icrc addresses are guaranteed to work.");
+    let to_account = prompt("Enter the address to drop NTN to. Must be a principal. Plug or the NNS Dapp icrc addresses are guaranteed to work.");
     try {
+      to_account = to_account.trim();
       Principal.fromText(to_account);
     } catch (e) {
       alert("Invalid address");
@@ -20556,7 +20558,7 @@ async function main() {
     await Promise.all(Object.keys(accounts).map(async (acc) => {
       console.log("%c" + acc + " checking...", "color: green; font-size:14px;");
       let rez = await can.drop(accounts[acc].subaccount, { owner: to_account });
-      console.log(ae(rez));
+      console.log(rez.toFixed(4) + " NTN");
     }));
   }
 }

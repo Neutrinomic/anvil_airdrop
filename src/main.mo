@@ -30,7 +30,7 @@ actor class() = this {
         let my_target = Array.find<AirdropTarget>(airdrop_accounts,  func((share, ac)) = ac == acc);
         let ?target = my_target else return 0;
         
-        Float.fromInt(target.0) / Float.fromInt(airdrop_total);
+        Float.fromInt(target.0) / Float.fromInt(airdrop_total) * 17000;
     };
 
     public shared({caller}) func start() : async () {
