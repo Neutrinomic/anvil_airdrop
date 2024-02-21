@@ -7,6 +7,6 @@ let ic = icblast({identity});
 
 let can = await ic("dzbb3-wiaaa-aaaal-qdhiq-cai");
 
-await can.getDropped().then(console.log);
+await can.getDropped().then(x => console.log(toState(x)));
 
 await can.getInfo().then(x => console.log(toState(x)));
